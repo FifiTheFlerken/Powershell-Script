@@ -1,0 +1,27 @@
+# Create parent folder and subfolders
+New-Item -ItemType Directory -Path "C:\ParentFolder"
+New-Item -ItemType Directory -Path "C:\ParentFolder\Red"
+New-Item -ItemType Directory -Path "C:\ParentFolder\Green"
+New-Item -ItemType Directory -Path "C:\ParentFolder\Blue"
+
+# Create 50 files in each color
+for ($i=1; $i -le 50; $i++) {
+    New-Item -ItemType File -Path "C:\ParentFolder\Red\redFile$i.txt"
+    New-Item -ItemType File -Path "C:\ParentFolder\Green\greenFile$i.txt"
+    New-Item -ItemType File -Path "C:\ParentFolder\Blue\blueFile$i.txt"
+}
+
+# Move files to appropriate subfolders
+Move-Item "C:\ParentFolder\Red\*" "C:\ParentFolder\Red"
+Move-Item "C:\ParentFolder\Green\*" "C:\ParentFolder\Green"
+Move-Item "C:\ParentFolder\Blue\*" "C:\ParentFolder\Blue"
+
+# Delete odd numbered files in red folder
+Get-ChildItem "C:\ParentFolder\Red" | Where-Object { $_.Name -like "redFile*[13579].txt" } | Remove-Item
+
+# Rename blue folder to grey and rename files
+Rename-Item "C:\ParentFolder\Blue" "Grey"
+Get-ChildItem "C:\ParentFolder\Grey" | Where-Object { $_.Name -like "blueFile*.txt" } | Rename-Item -NewName { $_.Name -replace "blue", "grey" }
+
+# Delete all files in green folder
+Remove-Item "C:\ParentFolder\Green\*"
